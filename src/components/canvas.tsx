@@ -8,11 +8,17 @@ interface CanvasProps {
 
 const Canvas: React.FC<CanvasProps> = ({ activeToolId }) => {
 	const canvasRef = useRef<HTMLCanvasElement>(null);
+	// Function to safely get the current context
+	const getContext = () => {
+		const canvas = canvasRef.current;
+		return canvas?.getContext('2d');
+	  };
+
 	const [isDrawing, setIsDrawing] = useState<boolean>(false);
 	const [cursorURL, setCursorURL] = useState<string>("");
-	let activeTool = tools[activeToolId]
+	let activeTool = tools[activeToolId];
 
-
+	// Change cursor icon each time the active tool is changed.
 	useEffect(() => {
 		// Check if window is defined to avoid SSR issues, even though 'use client' should handle it
 		if (typeof window !== "undefined") {
@@ -52,31 +58,42 @@ const Canvas: React.FC<CanvasProps> = ({ activeToolId }) => {
 		}
 	};
 
+
 	useEffect(() => {
 		const canvas = canvasRef.current;
 		if (canvas) {
-			canvas.width = window.innerWidth;
-			canvas.height = window.innerHeight;
-
-			const ctx = canvas.getContext("2d");
-			if (ctx) {
-				// MAKE THESE PROPS
-				ctx.strokeStyle = "black";
-				ctx.lineWidth = 10;
-			}
-		}
-
-		// Adjust canvas size on window resize
+		  canvas.width = window.innerWidth;
+		  canvas.height = window.innerHeight;
+	
+		  const ctx = getContext();
+		  if (ctx) {
+			ctx.strokeStyle = 'black';
+			ctx.lineWidth = 10;
+		  }
+		
+	
 		const resizeCanvas = () => {
-			if (canvas) {
-				canvas.width = window.innerWidth;
-				canvas.height = window.innerHeight;
-			}
+		  canvas.width = window.innerWidth;
+		  canvas.height = window.innerHeight;
 		};
-		window.addEventListener("resize", resizeCanvas);
+	
+		window.addEventListener('resize', resizeCanvas);
+		return () => window.removeEventListener('resize', resizeCanvas);}
+	  }, []);
 
-		return () => window.removeEventListener("resize", resizeCanvas);
-	}, []);
+	  useEffect(() => {
+		const ctx = getContext();
+		if (ctx) {
+		  if (activeTool.id === 6) {
+			ctx.strokeStyle = 'white'; // Example for eraser functionality
+			ctx.lineWidth = 15; // Adjust based on activeTool if needed
+		  } else {
+			ctx.strokeStyle = 'black';
+			ctx.lineWidth = 10; // Adjust based on activeTool if needed
+		  }
+		}
+	  }, [activeTool]);
+
 
 	return (
 		<canvas
@@ -90,7 +107,7 @@ const Canvas: React.FC<CanvasProps> = ({ activeToolId }) => {
 				backgroundColor: "white",
 				width: "100%",
 				height: "100%",
-				cursor: cursorURL ? `url('${cursorURL}') 6 23, auto` : "auto",
+				cursor: cursorURL ? `url('${cursorURL}') ${activeTool.xOffset} ${activeTool.yOffset}, auto` : "auto",
 			}}
 		/>
 	);
