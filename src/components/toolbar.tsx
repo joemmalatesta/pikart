@@ -2,7 +2,6 @@ import { tools } from "@/lib/tools";
 import { useState, useEffect } from "react";
 import html2canvas from "html2canvas";
 
-
 interface ToolbarProps {
 	activeToolId: number;
 	setActiveToolId: (id: number) => void;
@@ -26,6 +25,7 @@ const Toolbar: React.FC<ToolbarProps> = ({ setActiveToolId }) => {
 
 
 	return (
+		<section className="flex flex-col gap-2">
 		<main className="ring-2 rounded-xl ring-gray-800/70 bg-gray-700/60 flex justify-between gap-10 p-1 px-6">
 			{tools.map((tool) => {
 				return (
@@ -47,6 +47,7 @@ const Toolbar: React.FC<ToolbarProps> = ({ setActiveToolId }) => {
 				<img className="w-7" src="icons/export.svg" alt="Export" />
 			</button>
 		</main>
+		</section>
 	);
 };
 

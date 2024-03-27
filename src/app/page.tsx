@@ -10,28 +10,29 @@ import { useState, useEffect } from "react";
 export default function Home() {
 	const [activeTool, setActiveTool] = useState<number>(0);
 	const [textboxList, SetTextboxList] = useState<TextBox[]>([]);
+	const [lineThickness, setLineThickness] = useState<number>(4);
+	const [color, setColor] = useState<string>("Black");
 
-	useEffect(() => {
-		console.log(textboxList)
-	}, [textboxList])
-	
+	// useEffect(() => {
+	// 	console.log('color changed')
+	// }, [color])
+
 	return (
 		<main className="text-5xl w-screen h-screen">
 			{textboxList.map((textbox) => {
 				return (
-					<textarea
-					value={textbox.text}
-					className={`bg-transparent rounded-md p-2 `}
-					style={{
-						position: "absolute",
-						left: `${textbox.x}px`,
-						top: `${textbox.y}px`,
-						width: `${textbox.width}px`,
-						height: `${textbox.height}px`,
-						resize: "none",
-					}}
-				/>
-				)
+					<p	
+						key={textbox.x}
+						className={`p-2`}
+						style={{
+							position: "absolute",
+							left: `${textbox.x}px`,
+							top: `${textbox.y}px`,
+						}}
+					>
+						{textbox.text}
+					</p>
+				);
 			})}
 			{activeTool === 5 ? (
 				<div className="absolute inset-0">
@@ -40,13 +41,15 @@ export default function Home() {
 			) : (
 				""
 			)}
-			<Canvas activeToolId={activeTool} />
+			<Canvas activeToolId={activeTool} color={color} lineThickness={lineThickness} />
 			{/* PASS ACTIVE TOOL PROP INTO PAGE */}
-			<div className="absolute flex justify-center bottom-10 right-1/2 translate-x-1/2">
+			<div className="absolute flex flex-col justify-center bottom-10 right-1/2 translate-x-1/2">
+				{activeTool === 3 ? (
+					<DrawingExtras color={color} setColor={setColor} lineThickness={lineThickness} setLineThickness={setLineThickness} />
+				) : (
+					""
+				)}
 				<Toolbar activeToolId={activeTool} setActiveToolId={setActiveTool} />
-			</div>
-			<div className="absolute flex justify-start bottom-1/2 left-10 translate-y-1/2">
-				<DrawingExtras />
 			</div>
 		</main>
 	);

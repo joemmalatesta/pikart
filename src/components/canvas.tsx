@@ -1,12 +1,17 @@
 "use client";
 
 import { tools } from "@/lib/tools";
+import { color } from "html2canvas/dist/types/css/types/color";
 import { useEffect, useRef, useState } from "react";
 interface CanvasProps {
 	activeToolId: number;
+	color?: string,
+	lineThickness?: number,
 }
 
-const Canvas: React.FC<CanvasProps> = ({ activeToolId }) => {
+const Canvas: React.FC<CanvasProps> = ({ activeToolId, color, lineThickness }) => {
+
+
 	const canvasRef = useRef<HTMLCanvasElement>(null);
 	// Function to safely get the current context
 	const getContext = () => {
@@ -67,8 +72,8 @@ const Canvas: React.FC<CanvasProps> = ({ activeToolId }) => {
 	
 		  const ctx = getContext();
 		  if (ctx) {
-			ctx.strokeStyle = 'black';
-			ctx.lineWidth = 10;
+			ctx.strokeStyle = color ? color: "black";
+			ctx.lineWidth = lineThickness ? lineThickness: 4;
 		  }
 		
 	
@@ -88,11 +93,11 @@ const Canvas: React.FC<CanvasProps> = ({ activeToolId }) => {
 			ctx.strokeStyle = 'white'; // Example for eraser functionality
 			ctx.lineWidth = 15; // Adjust based on activeTool if needed
 		  } else {
-			ctx.strokeStyle = 'black';
-			ctx.lineWidth = 10; // Adjust based on activeTool if needed
+			ctx.strokeStyle = color ? color: "black";
+			ctx.lineWidth = lineThickness ? lineThickness: 4;
 		  }
 		}
-	  }, [activeTool]);
+	  }, [activeTool, color, lineThickness]);
 
 
 	return (
