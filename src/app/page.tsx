@@ -34,7 +34,7 @@ export default function Home() {
 					</p>
 				);
 			})}
-			{activeTool === 5 ? (
+			{activeTool === 4 ? (
 				<div className="absolute inset-0">
 					<BoxExtras textboxList={textboxList} setTextboxList={SetTextboxList} />
 				</div>
@@ -44,7 +44,7 @@ export default function Home() {
 			<Canvas activeToolId={activeTool} color={color} lineThickness={lineThickness} />
 			{/* PASS ACTIVE TOOL PROP INTO PAGE */}
 			<div className="absolute flex flex-col justify-center bottom-10 right-1/2 translate-x-1/2">
-				{activeTool === 3 ? (
+				{activeTool === 2 ? (
 					<DrawingExtras color={color} setColor={setColor} lineThickness={lineThickness} setLineThickness={setLineThickness} />
 				) : (
 					""
