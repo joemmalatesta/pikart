@@ -9,10 +9,10 @@ interface TextBox {
 
 interface TextBoxProps {
 	textboxList: TextBox[],
-	setTextboxList: any,
+	setTextboxList: React.Dispatch<React.SetStateAction<TextBox[]>>,
 }
 
-const DrawTextarea: React.FC<TextBoxProps> = () => {
+const DrawTextarea: React.FC<TextBoxProps> = ({textboxList, setTextboxList}) => {
 	const [isDragging, setIsDragging] = useState(false);
 	const [startPosition, setStartPosition] = useState({ x: 0, y: 0 });
 	const [currentPosition, setCurrentPosition] = useState({ x: 0, y: 0 });
@@ -46,6 +46,12 @@ const DrawTextarea: React.FC<TextBoxProps> = () => {
 			width: Math.abs(currentPosition.x - startPosition.x),
 			height: Math.abs(currentPosition.y - startPosition.y),
 		});
+        let textbox: TextBox = {text: "", x: Math.min(startPosition.x, currentPosition.x),
+        y: Math.min(startPosition.y, currentPosition.y),
+        width: Math.abs(currentPosition.x - startPosition.x),
+        height: Math.abs(currentPosition.y - startPosition.y),};
+        setTextboxList([...textboxList, textbox])
+        console.log('new textbox created')
 	};
 
 	// Calculate the dimensions and position for the outline div
@@ -64,7 +70,7 @@ const DrawTextarea: React.FC<TextBoxProps> = () => {
 			onMouseDown={handleMouseDown}
 			onMouseMove={handleMouseMove}
 			onMouseUp={handleMouseUp}
-			onMouseLeave={handleMouseUp} // Consider mouse leaving as ending the drag
+			// onMouseLeave={handleMouseUp()} // Consider mouse leaving as ending the drag
 			style={{ height: "100vh", position: "relative", cursor: "crosshair" }}
 		>
 			{isDragging && <div style={outlineStyle} />}
@@ -72,6 +78,18 @@ const DrawTextarea: React.FC<TextBoxProps> = () => {
 				<textarea
                     ref={textareaRef}
 					className={`bg-transparent outline-1 rounded-md outline p-2 `}
+                    onChange={(event) => {
+                        let textbox: TextBox = {text: event.target.value, x: textarea.x, y:textarea.y, width: textarea.width,
+                        height: textarea.height};
+                        if (textboxList[textboxList.length-1].x == textbox.x && textboxList[textboxList.length-1].width == textbox.width){
+                            console.log('editing old textbox')
+                            textboxList[textboxList.length-1] = textbox
+                        }
+                        else{ 
+                            // This really should not happen
+                            setTextboxList([...textboxList, textbox]);
+                        }
+                      }}
 					style={{
 						position: "absolute",
 						left: `${textarea.x}px`,

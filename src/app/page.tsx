@@ -18,8 +18,28 @@ export default function Home() {
 	const [activeTool, setActiveTool] = useState<number>(0);
 	const [textboxList, SetTextboxList] = useState<TextBox[]>([]);
 
+	useEffect(() => {
+		console.log(textboxList)
+	}, [textboxList])
+	
 	return (
 		<main className="text-5xl w-screen h-screen">
+			{textboxList.map((textbox) => {
+				return (
+					<textarea
+					value={textbox.text}
+					className={`bg-transparent rounded-md p-2 `}
+					style={{
+						position: "absolute",
+						left: `${textbox.x}px`,
+						top: `${textbox.y}px`,
+						width: `${textbox.width}px`,
+						height: `${textbox.height}px`,
+						resize: "none",
+					}}
+				/>
+				)
+			})}
 			{activeTool === 5 ? (
 				<div className="absolute inset-0">
 					<BoxExtras textboxList={textboxList} setTextboxList={SetTextboxList} />
