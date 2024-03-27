@@ -1,14 +1,7 @@
 "use client";
 
-interface TextBox {
-	x: number;
-	y: number;
-	width: number;
-	height: number;
-	text: string;
-}
-
-import BoxExtras from "@/components/boxExtras";
+import { TextBox } from "@/lib/types";
+import BoxExtras from "@/components/textbox";
 import Canvas from "@/components/canvas";
 import DrawingExtras from "@/components/drawingExtras";
 import Toolbar from "@/components/toolbar";

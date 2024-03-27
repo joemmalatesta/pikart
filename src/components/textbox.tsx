@@ -1,11 +1,5 @@
 import React, { TextareaHTMLAttributes, useEffect, useRef, useState } from "react";
-interface TextBox {
-	x: number,
-	y: number,
-	width: number,
-	height: number,
-	text: string
-}
+import { TextBox } from "@/lib/types";
 
 interface TextBoxProps {
 	textboxList: TextBox[],
@@ -16,7 +10,7 @@ const DrawTextarea: React.FC<TextBoxProps> = ({textboxList, setTextboxList}) => 
 	const [isDragging, setIsDragging] = useState(false);
 	const [startPosition, setStartPosition] = useState({ x: 0, y: 0 });
 	const [currentPosition, setCurrentPosition] = useState({ x: 0, y: 0 });
-	const [textarea, setTextarea] = useState(null);
+	const [textarea, setTextarea] = useState<TextBox>();
     const textareaRef = useRef<HTMLTextAreaElement>(null); // Create a ref for the textarea
 
     useEffect(() => {
@@ -26,14 +20,14 @@ const DrawTextarea: React.FC<TextBoxProps> = ({textboxList, setTextboxList}) => 
         }
       }, [textarea]); // Dependency array includes textarea, so this runs every time a new textarea is created
 
-	const handleMouseDown = (event: MouseEvent) => {
+	const handleMouseDown = (event: React.MouseEvent) => {
 		setIsDragging(true);
 		const startPos = { x: event.clientX, y: event.clientY };
 		setStartPosition(startPos);
 		setCurrentPosition(startPos); // Initialize current position to start position
 	};
 
-	const handleMouseMove = (event: MouseEvent) => {
+	const handleMouseMove = (event: React.MouseEvent) => {
 		if (!isDragging) return;
 		setCurrentPosition({ x: event.clientX, y: event.clientY });
 	};
@@ -55,7 +49,7 @@ const DrawTextarea: React.FC<TextBoxProps> = ({textboxList, setTextboxList}) => 
 	};
 
 	// Calculate the dimensions and position for the outline div
-	const outlineStyle = {
+	const outlineStyle: React.CSSProperties = {
 		position: "absolute",
 		left: `${Math.min(startPosition.x, currentPosition.x)}px`,
 		top: `${Math.min(startPosition.y, currentPosition.y)}px`,
@@ -73,6 +67,7 @@ const DrawTextarea: React.FC<TextBoxProps> = ({textboxList, setTextboxList}) => 
 			// onMouseLeave={handleMouseUp()} // Consider mouse leaving as ending the drag
 			style={{ height: "100vh", position: "relative", cursor: "crosshair" }}
 		>
+			{/* Make  */}
 			{isDragging && <div style={outlineStyle} />}
 			{textarea && (
 				<textarea
