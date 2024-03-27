@@ -1,5 +1,7 @@
 import { tools } from "@/lib/tools";
 import { useState, useEffect } from "react";
+import html2canvas from "html2canvas";
+
 
 interface ToolbarProps {
 	activeToolId: number;
@@ -8,6 +10,19 @@ interface ToolbarProps {
 
 const Toolbar: React.FC<ToolbarProps> = ({ setActiveToolId }) => {
 	const [active, setActive] = useState(0);
+	const takeScreenshot = () => {
+		html2canvas(document.body).then((canvas) => {
+		  // Convert the canvas to a data URL
+		  const base64image = canvas.toDataURL("image/png");
+		  // Open a new blank window
+		  const newWindow = window.open('', '_blank');
+		  if (newWindow) {
+			// Set the contents of the new window to display the image
+			newWindow.document.write(`<img src="${base64image}" width="100%" />`);
+			newWindow.document.title = "Screenshot";
+		  }
+		});
+	  };
 
 
 	return (
@@ -28,6 +43,9 @@ const Toolbar: React.FC<ToolbarProps> = ({ setActiveToolId }) => {
 					</button>
 				);
 			})}
+			<button onClick={takeScreenshot} className="w-12 h-12 flex justify-center items-center transition-all duration-200">
+				<img className="w-7" src="icons/export.svg" alt="Export" />
+			</button>
 		</main>
 	);
 };
