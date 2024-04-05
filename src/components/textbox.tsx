@@ -45,7 +45,6 @@ const DrawTextarea: React.FC<TextBoxProps> = ({textboxList, setTextboxList}) => 
         width: Math.abs(currentPosition.x - startPosition.x),
         height: Math.abs(currentPosition.y - startPosition.y),};
         setTextboxList([...textboxList, textbox])
-        console.log('new textbox created')
 	};
 
 	// Calculate the dimensions and position for the outline div
@@ -77,7 +76,6 @@ const DrawTextarea: React.FC<TextBoxProps> = ({textboxList, setTextboxList}) => 
                         let textbox: TextBox = {text: event.target.value, x: textarea.x, y:textarea.y, width: textarea.width,
                         height: textarea.height};
                         if (textboxList[textboxList.length-1].x == textbox.x && textboxList[textboxList.length-1].width == textbox.width){
-                            console.log('editing old textbox')
                             textboxList[textboxList.length-1] = textbox
                         }
                         else{ 

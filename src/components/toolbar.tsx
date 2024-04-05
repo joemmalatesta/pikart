@@ -49,9 +49,6 @@ const Toolbar: React.FC<ToolbarProps> = ({ setActiveToolId }) => {
 				<button onClick={takeScreenshot} className="w-12 h-12 flex justify-center items-center transition-all duration-200">
 					<img className="w-7" src="icons/export.svg" alt="Export" title="export" />
 				</button>
-				<button onClick={clearCanvas} className="w-12 h-12 flex justify-center items-center transition-all duration-200">
-					<img className="w-8" src="icons/clear.svg" alt="clear" title="clear" />
-				</button>
 			</main>
 		</section>
 	);

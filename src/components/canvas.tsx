@@ -5,23 +5,26 @@ import { color } from "html2canvas/dist/types/css/types/color";
 import { useEffect, useRef, useState } from "react";
 interface CanvasProps {
 	activeToolId: number;
-	color?: string,
-	lineThickness?: number,
+	color?: string;
+	lineThickness?: number;
+	onIsDrawingChange: (isDrawing: boolean) => void;
 }
 
-const Canvas: React.FC<CanvasProps> = ({ activeToolId, color, lineThickness }) => {
-
-
+const Canvas: React.FC<CanvasProps> = ({ activeToolId, color, lineThickness, onIsDrawingChange }) => {
 	const canvasRef = useRef<HTMLCanvasElement>(null);
 	// Function to safely get the current context
 	const getContext = () => {
 		const canvas = canvasRef.current;
-		return canvas?.getContext('2d');
-	  };
+		return canvas?.getContext("2d");
+	};
 
 	const [isDrawing, setIsDrawing] = useState<boolean>(false);
 	const [cursorURL, setCursorURL] = useState<string>("");
 	let activeTool = tools[activeToolId];
+
+	useEffect(() => {
+		onIsDrawingChange(isDrawing);
+	  }, [isDrawing, onIsDrawingChange]);
 
 	// Change cursor icon each time the active tool is changed.
 	useEffect(() => {
@@ -63,42 +66,75 @@ const Canvas: React.FC<CanvasProps> = ({ activeToolId, color, lineThickness }) =
 		}
 	};
 
-
 	useEffect(() => {
 		const canvas = canvasRef.current;
 		if (canvas) {
-		  canvas.width = window.innerWidth;
-		  canvas.height = window.innerHeight;
-	
-		  const ctx = getContext();
-		  if (ctx) {
-			ctx.strokeStyle = color ? color: "black";
-			ctx.lineWidth = lineThickness ? lineThickness: 4;
-		  }
-		
-	
-		const resizeCanvas = () => {
-		  canvas.width = window.innerWidth;
-		  canvas.height = window.innerHeight;
-		};
-	
-		window.addEventListener('resize', resizeCanvas);
-		return () => window.removeEventListener('resize', resizeCanvas);}
-	  }, []);
+			canvas.width = window.innerWidth;
+			canvas.height = window.innerHeight;
 
-	  useEffect(() => {
+			const ctx = getContext();
+			if (ctx) {
+				ctx.strokeStyle = color ? color : "black";
+				ctx.lineWidth = lineThickness ? lineThickness : 4;
+			}
+
+			const resizeCanvas = () => {
+				canvas.width = window.innerWidth;
+				canvas.height = window.innerHeight;
+			};
+
+			window.addEventListener("resize", resizeCanvas);
+			return () => window.removeEventListener("resize", resizeCanvas);
+		}
+	}, []);
+
+	useEffect(() => {
 		const ctx = getContext();
 		if (ctx) {
-		  if (activeTool.id === 6) {
-			ctx.strokeStyle = 'white'; // Example for eraser functionality
-			ctx.lineWidth = 15; // Adjust based on activeTool if needed
-		  } else {
-			ctx.strokeStyle = color ? color: "black";
-			ctx.lineWidth = lineThickness ? lineThickness: 4;
-		  }
+			if (activeTool.id === 6) {
+				ctx.strokeStyle = "white"; // Example for eraser functionality
+				ctx.lineWidth = 15; // Adjust based on activeTool if needed
+			} else {
+				ctx.strokeStyle = color ? color : "black";
+				ctx.lineWidth = lineThickness ? lineThickness : 4;
+			}
 		}
-	  }, [activeTool, color, lineThickness]);
+	}, [activeTool, color, lineThickness]);
 
+	useEffect(() => {
+		const ctx = getContext();
+		if (ctx) {
+			if (activeTool.id === 5) {
+				ctx.strokeStyle = "white"; // Example for eraser functionality
+				ctx.lineWidth = 15; // Adjust based on activeTool if needed
+			} else {
+				ctx.strokeStyle = color ? color : "black";
+				ctx.lineWidth = lineThickness ? lineThickness : 4;
+			}
+		}
+	}, [activeTool]);
+
+	// Function to clear the canvas
+	const clearCanvas = () => {
+		const canvas = canvasRef.current;
+		const ctx = canvas?.getContext("2d");
+		if (canvas && ctx) {
+			ctx.clearRect(0, 0, canvas.width, canvas.height);
+		}
+	};
+
+	// Example function to attach clearCanvas to a specific key (e.g., 'c')
+	useEffect(() => {
+		const handleKeyDown = (event: KeyboardEvent) => {
+			if (event.key === "c" && activeToolId === 5) {
+				// Press 'C' to clear the canvas
+				clearCanvas();
+			}
+		};
+
+		window.addEventListener("keydown", handleKeyDown);
+		return () => window.removeEventListener("keydown", handleKeyDown);
+	}, [activeToolId]);
 
 	return (
 		<canvas
@@ -113,6 +149,7 @@ const Canvas: React.FC<CanvasProps> = ({ activeToolId, color, lineThickness }) =
 				width: "100%",
 				height: "100%",
 				cursor: cursorURL ? `url('${cursorURL}') ${activeTool.xOffset} ${activeTool.yOffset}, auto` : "auto",
+				opacity: `${isDrawing ? "50%": "100%"}`
 			}}
 		/>
 	);
