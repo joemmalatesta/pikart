@@ -14,3 +14,27 @@ export interface TextBox {
 	height: number;
 	text?: string;
 }
+
+export interface Circle {
+	x: number;
+	y: number;
+	radius: number;
+}
+
+export interface Rectangle {
+	x: number;
+	y: number;
+	width: number;
+	height: number;
+}
+
+interface Coordinates {
+	x: number,
+	y: number
+}
+
+export interface Triangle {
+	v1: Coordinates,
+	v2: Coordinates,
+	v3: Coordinates,
+}

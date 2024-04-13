@@ -13,3 +13,9 @@ Our senior capstone project
 - Remove brush and make a clear canvas option.
 - Fix text box so it doesn't interact with Canvas
 - Screenshot looks like ass but what can you do...
+
+### Things I need to add to make this useable
+- Cursor working to drag shapes and textbox
+- Fill not really necessary
+- Text and alignment options for textbox
+- Shapes / text erasable separately 
