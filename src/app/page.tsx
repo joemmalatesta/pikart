@@ -172,6 +172,7 @@ export default function Home() {
 				}
 
 				<Toolbar activeToolId={activeTool} setActiveToolId={setActiveTool} />
+				<p className="text-xs font-medium flex justify-center py-1 gap-1">Created by <a className="underline underline-offset-2 hover:underline-offset-4 transition-all" href="https://joemmalatesta.com">Joe Malatesta</a></p>
 			</div>
 		</main>
 	);
